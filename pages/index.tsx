@@ -10,7 +10,7 @@ export const getStaticProps = async () => {
       : (await import("data/releases/index.json")).default;
 
   return {
-    revalidate: 60 * 60, // 1hr
+    // revalidate: 60 * 60, // 1hr
     props: {
       data,
     },
