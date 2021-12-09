@@ -4,12 +4,13 @@ module.exports = {
   darkMode: "class", // or 'media' or 'class'
   theme: {
     extend: {
-      boxShadow: ["dark"],
-    },
-    boxShadow: {
-      DEFAULT: "0 5px 10px rgba(0,0,0,0.12)",
-      dark: "0 0 0 1px #333",
-      none: "none",
+      padding: {
+        sm: "6px",
+      },
+      fontFamily: {
+        sans: '-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"',
+        mono: "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+      },
     },
   },
   variants: {

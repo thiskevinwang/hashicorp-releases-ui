@@ -38,7 +38,7 @@ const reducer = (acc: string[][], next: string, i: number) => {
 type P = NextPage<InferGetStaticPropsType<typeof getStaticProps>>;
 const Home: P = ({ data }) => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-opacity">
+    <div className="font-sans text-sm min-h-screen bg-white dark:bg-black">
       <Head>
         <title>HashiCorp releases UI</title>
         <link rel="icon" href="/favicon.ico" />
@@ -58,10 +58,18 @@ const Home: P = ({ data }) => {
         details summary::marker {
           display: none;
         }
+        details:first-of-type summary {
+          border-top-left-radius: 6px;
+          border-top-right-radius: 6px;
+        }
+        details:last-of-type summary {
+          border-bottom-left-radius: 6px;
+          border-bottom-right-radius: 6px;
+        }
       `}</style>
 
       <main className="mx-2 sm:mx-10 md:mx-20 pb-24">
-        <nav className="bg-gray-50 dark:bg-gray-900 h-16 sticky top-0 flex flex-row-reverse z-10">
+        <nav className="bg-white dark:bg-black h-16 sticky top-0 flex flex-row-reverse z-20">
           <button
             onClick={() => {
               document.documentElement.classList.toggle("dark");
@@ -72,7 +80,7 @@ const Home: P = ({ data }) => {
           </button>
         </nav>
 
-        <div className="dark:text-white relative">
+        <div className={["dark:text-white relative"].join(" ")}>
           {Object.entries(data).map(([key, { name, versions }]) => {
             const versionKeys = Object.keys(versions);
             const vLists = versionKeys
@@ -82,38 +90,58 @@ const Home: P = ({ data }) => {
               <details
                 key={key}
                 className={[
-                  "border-gray-200 dark:border-gray-700",
-                  "border-l border-r border-b first-of-type:border-t",
+                  "border-gray-300 dark:border-gray-600",
+                  "border-b first-of-type:border-t",
                   "first-of-type:rounded-t-md last-of-type:rounded-b-md",
-                  "hover:bg-gray-100 dark:hover:bg-gray-800",
-                  "transition-colors",
                 ].join(" ")}
               >
-                <summary className={["select-none cursor-pointer sticky top-16 p-2"].join(" ")}>
-                  {key}&nbsp;<small className="text-gray-500 dark:text-gray-400">({versionKeys.length})</small>
+                <summary
+                  className={[
+                    "sticky top-16",
+                    "select-none cursor-pointer p-2",
+                    "bg-white dark:bg-black",
+                    "z-10",
+                    "border-gray-300 dark:border-gray-600",
+                    "border-t border-b border-l border-r",
+                    "-my-px",
+                    "hover:bg-gray-100 dark:hover:bg-gray-800",
+                    "transition-colors",
+                  ].join(" ")}
+                >
+                  {key}&nbsp;
+                  <span className="dark:text-white text-xs rounded-full bg-gray-300 dark:bg-gray-600 px-sm">
+                    {versionKeys.length}
+                  </span>
                 </summary>
 
-                <div className="font-mono border border-gray-200 dark:border-gray-700 rounded-md p-5 m-2">
-                  <div className="max-w-full overflow-x-scroll flex flex-row max-h-80">
+                <div className="border-l border-r  border-gray-300 dark:border-gray-600 border-t max-h-80 overflow-y-auto relative">
+                  <div className="max-w-full overflow-x-auto flex flex-row">
                     {vLists.map((vList, i) => {
                       // columns
                       return (
                         <div
                           key={i}
                           className={[
-                            "min-h-full max-h-full",
-                            "border-dashed border-r border-l first-of-type:border-l-0 last-of-type:border-r-0 border-gray-200 dark:border-gray-700",
+                            "pb-3 px-2",
+                            "border-r border-l first-of-type:border-l-0 last-of-type:border-r-0 border-gray-300 dark:border-gray-600",
                             "-ml-px first-of-type:ml-0",
                           ].join(" ")}
                         >
-                          <small className="flex justify-center sticky top-0 text-gray-500 dark:text-gray-400 mb-2">
+                          <h2
+                            className={[
+                              "font-semibold text-base",
+                              "sticky top-0 mb-2 p-2",
+                              "border-gray-300 dark:border-gray-600 border-b",
+                              "bg-white dark:bg-black",
+                            ].join(" ")}
+                          >
                             {semver.coerce(vList[0])!.major}.{semver.coerce(vList[0])!.minor}.x
-                          </small>
+                          </h2>
 
                           {vList.map((v, i) => {
                             return (
                               <div key={v}>
-                                <span className="inline-block bg-gray-200 dark:bg-gray-900 py-1 px-3 my-1 mx-2 rounded-full whitespace-nowrap dark:shadow-dark">
+                                <span className="text-xs font-medium leading-4 border border-current inline-block px-2 mb-1 rounded-full whitespace-nowrap">
                                   {v}
                                 </span>
                               </div>
