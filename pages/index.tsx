@@ -38,7 +38,7 @@ const reducer = (acc: string[][], next: string, i: number) => {
 type P = NextPage<InferGetStaticPropsType<typeof getStaticProps>>;
 const Home: P = ({ data }) => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-opacity font-mono ">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-opacity">
       <Head>
         <title>HashiCorp releases UI</title>
         <link rel="icon" href="/favicon.ico" />
@@ -49,6 +49,13 @@ const Home: P = ({ data }) => {
           display: none;
         }
         :global(html.dark) .moon-dark {
+          display: none;
+        }
+        details > summary {
+          list-style: none;
+        }
+        details summary::-webkit-details-marker,
+        details summary::marker {
           display: none;
         }
       `}</style>
@@ -72,12 +79,21 @@ const Home: P = ({ data }) => {
               .sort((a, b) => semver.compare(semver.coerce(a)!, semver.coerce(b)!))
               .reduce(reducer, [] as string[][]);
             return (
-              <details key={key} className="">
-                <summary className="bg-gray-50 dark:bg-gray-900 select-none cursor-pointer sticky top-16">
+              <details
+                key={key}
+                className={[
+                  "border-gray-200 dark:border-gray-700",
+                  "border-l border-r border-b first-of-type:border-t",
+                  "first-of-type:rounded-t-md last-of-type:rounded-b-md",
+                  "hover:bg-gray-100 dark:hover:bg-gray-800",
+                  "transition-colors",
+                ].join(" ")}
+              >
+                <summary className={["select-none cursor-pointer sticky top-16 p-2"].join(" ")}>
                   {key}&nbsp;<small className="text-gray-500 dark:text-gray-400">({versionKeys.length})</small>
                 </summary>
 
-                <div className="border border-gray-200 dark:border-gray-700 rounded-md p-5">
+                <div className="font-mono border border-gray-200 dark:border-gray-700 rounded-md p-5 m-2">
                   <div className="max-w-full overflow-x-scroll flex flex-row max-h-80">
                     {vLists.map((vList, i) => {
                       // columns
