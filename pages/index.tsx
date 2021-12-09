@@ -7,9 +7,7 @@ export const getStaticProps = async () => {
   const data: Releases =
     process.env.NODE_ENV === "production"
       ? await fetch("https://releases.hashicorp.com/index.json").then((res) => res.json())
-      : await (
-          await import("data/releases/index.json")
-        ).default;
+      : (await import("data/releases/index.json")).default;
 
   return {
     revalidate: 60 * 60, // 1hr
