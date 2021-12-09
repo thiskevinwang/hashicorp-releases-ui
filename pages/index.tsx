@@ -1,6 +1,7 @@
+import { useCallback, useMemo } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Head from "next/head";
-import type { Releases } from "types/releases";
+import type { Releases, Versions } from "types/releases";
 import semver from "semver";
 
 export const getStaticProps = async () => {
@@ -17,7 +18,9 @@ export const getStaticProps = async () => {
   };
 };
 
-const reducer = (acc: string[][], next: string, i: number) => {
+const getKeys = (object: object) => Object.keys(object);
+
+const reducerFn = (acc: string[][], next: string, i: number) => {
   if (i > 0) {
     let diff: string | null;
     const prevV = acc.slice(-1)[0][0];
@@ -37,6 +40,16 @@ const reducer = (acc: string[][], next: string, i: number) => {
 
 type P = NextPage<InferGetStaticPropsType<typeof getStaticProps>>;
 const Home: P = ({ data }) => {
+  const entries = useMemo(() => Object.entries(data), [data]);
+
+  const getListsAndKeys = useCallback((versions: Versions) => {
+    const versionKeys = getKeys(versions);
+    const vLists = versionKeys
+      .sort((a, b) => semver.compare(semver.coerce(a)!, semver.coerce(b)!))
+      .reduce(reducerFn, [] as string[][]);
+    return { vLists, versionKeys };
+  }, []);
+
   return (
     <div className="font-sans text-sm min-h-screen bg-white dark:bg-black">
       <Head>
@@ -68,8 +81,8 @@ const Home: P = ({ data }) => {
         }
       `}</style>
 
-      <main className="mx-2 sm:mx-10 md:mx-20 pb-24">
-        <nav className="bg-white dark:bg-black h-16 sticky top-0 flex flex-row-reverse z-20">
+      <main className="pb-24">
+        <nav className="bg-white dark:bg-black h-16 sticky top-0 flex flex-row justify-between items-center z-20 border-gray-300 dark:border-gray-600 border-b px-2 sm:px-10 md:px-20">
           <button
             onClick={() => {
               document.documentElement.classList.toggle("dark");
@@ -80,12 +93,9 @@ const Home: P = ({ data }) => {
           </button>
         </nav>
 
-        <div className={["dark:text-white relative"].join(" ")}>
-          {Object.entries(data).map(([key, { name, versions }]) => {
-            const versionKeys = Object.keys(versions);
-            const vLists = versionKeys
-              .sort((a, b) => semver.compare(semver.coerce(a)!, semver.coerce(b)!))
-              .reduce(reducer, [] as string[][]);
+        <div className={["dark:text-white relative", "mt-4 mx-2 sm:mx-10 md:mx-20"].join(" ")}>
+          {entries.map(([key, { name, versions }]) => {
+            const { vLists, versionKeys } = getListsAndKeys(versions);
             return (
               <details
                 key={key}
