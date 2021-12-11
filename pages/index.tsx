@@ -46,7 +46,7 @@ const reducerFn = (acc: string[][], next: string, i: number) => {
 
 type P = NextPage<InferGetStaticPropsType<typeof getStaticProps>>;
 const Home: P = ({ data }) => {
-  const entries = useMemo(() => Object.entries(data), [data]);
+  const entries = useMemo(() => Object.entries(data as Releases), [data]);
 
   const getListsAndKeys = useCallback((versions: Versions) => {
     const versionKeys = getKeys(versions);
