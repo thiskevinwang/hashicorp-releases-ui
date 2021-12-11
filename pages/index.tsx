@@ -4,18 +4,24 @@ import Head from "next/head";
 import type { Releases, Versions } from "types/releases";
 import semver from "semver";
 
-export const getStaticProps = async () => {
-  const data: Releases =
-    process.env.NODE_ENV === "production"
-      ? await fetch("https://releases.hashicorp.com/index.json").then((res) => res.json())
-      : (await import("data/releases/index.json")).default;
+import { GitHub } from "components/github";
 
-  return {
-    revalidate: 60 * 60, // 1hr
-    props: {
-      data,
-    },
-  };
+export const getStaticProps = async () => {
+  try {
+    const data: Releases =
+      process.env.NODE_ENV === "production"
+        ? await fetch("https://releases.hashicorp.com/index.json").then((res) => res.json())
+        : (await import("data/releases/index.json")).default;
+
+    return {
+      revalidate: 60 * 60, // 1hr
+      props: {
+        data,
+      },
+    };
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const getKeys = (object: object) => Object.keys(object);
@@ -91,6 +97,17 @@ const Home: P = ({ data }) => {
             <span className="moon-light">🌝</span>
             <span className="moon-dark">🌚</span>
           </button>
+
+          <div>
+            <a
+              href="https://github.com/thiskevinwang/hashicorp-releases-ui"
+              className="text-black dark:text-white"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <GitHub />
+            </a>
+          </div>
         </nav>
 
         <div className={["dark:text-white relative", "mt-4 mx-2 sm:mx-10 md:mx-20"].join(" ")}>
