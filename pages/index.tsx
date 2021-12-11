@@ -14,7 +14,8 @@ export const getStaticProps = async () => {
         : (await import("data/releases/index.json")).default;
 
     return {
-      revalidate: 60 * 60, // 1hr
+      // Uncommenting this causes the serverless function to crash
+      // revalidate: 60 * 60, // 1hr
       props: {
         data,
       },
