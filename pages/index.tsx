@@ -5,6 +5,8 @@ import type { Releases, Versions } from "types/releases";
 import semver from "semver";
 
 import { GitHub } from "components/github";
+import { Sun } from "components/sun";
+import { Moon } from "components/moon";
 
 export const getStaticProps = async () => {
   try {
@@ -65,10 +67,10 @@ const Home: P = ({ data }) => {
       </Head>
 
       <style jsx>{`
-        :global(html):not(.dark) .moon-light {
+        :global(html):not(.dark) .moon {
           display: none;
         }
-        :global(html.dark) .moon-dark {
+        :global(html.dark) .sun {
           display: none;
         }
         details > summary {
@@ -89,14 +91,18 @@ const Home: P = ({ data }) => {
       `}</style>
 
       <main className="pb-24">
-        <nav className="bg-white dark:bg-black h-16 sticky top-0 flex flex-row justify-between items-center z-20 border-gray-300 dark:border-gray-600 border-b px-2 sm:px-10 md:px-20">
+        <nav className="text-black dark:text-white bg-white dark:bg-black h-16 sticky top-0 flex flex-row justify-between items-center z-20 border-gray-300 dark:border-gray-600 border-b px-2 sm:px-10 md:px-20">
           <button
             onClick={() => {
               document.documentElement.classList.toggle("dark");
             }}
           >
-            <span className="moon-light">🌝</span>
-            <span className="moon-dark">🌚</span>
+            <span className="sun">
+              <Sun />
+            </span>
+            <span className="moon">
+              <Moon />
+            </span>
           </button>
 
           <div>
